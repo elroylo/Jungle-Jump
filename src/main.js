@@ -38,23 +38,23 @@ var game = new Phaser.Game(config);
 // preloading assets
 function preload ()
 {
-    this.load.image('tiles', 'assets/gridtiles2.png');
-    this.load.image('tiles', 'assets/gridtiles2.png');
-    this.load.tilemapTiledJSON('map', 'assets/simple-map.json');
-    this.load.image('sky', 'assets/sky.png');
-    this.load.image('ground', 'assets/platform.png');
-    this.load.image('saw1', 'assets/spike1.png');
-    this.load.image('saw2', 'assets/platform.png');
-    this.load.image('saw3', 'assets/platform.png');
-    this.load.image('star', 'assets/star.png');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.image('sun', 'assets/sun.png');
-    this.load.image('alien', 'assets/space-baddie.png');
-    this.load.image('bullet', 'assets/star.png');
-    this.load.image('back', 'assets/background.png');
-    this.load.audio('sfx_select', 'assets/select.wav');
-    this.load.audio('sfx_jump', 'assets/jump.wav');
-    this.load.audio('sfx_shoot', 'assets/shoot.wav');
+    this.load.image('tiles', './assets/gridtiles2.png');
+    this.load.image('tiles', './assets/gridtiles2.png');
+    this.load.tilemapTiledJSON('map', './assets/simple-map.json');
+    this.load.image('sky', './assets/sky.png');
+    this.load.image('ground', './assets/platform.png');
+    this.load.image('saw1', './assets/spike1.png');
+    this.load.image('saw2', './assets/platform.png');
+    this.load.image('saw3', './assets/platform.png');
+    this.load.image('star', './assets/star.png');
+    this.load.spritesheet('dude', './assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('sun', './assets/sun.png');
+    this.load.image('alien', './assets/space-baddie.png');
+    this.load.image('bullet', './assets/star.png');
+    this.load.image('back', './assets/background.png');
+    this.load.audio('sfx_select', './assets/select.wav');
+    this.load.audio('sfx_jump', './assets/jump.wav');
+    this.load.audio('sfx_shoot', './assets/shoot.wav');
     
 }
 
