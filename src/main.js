@@ -16,6 +16,7 @@ var config = {
         update: update
     }
 };
+// declaring variables
 var ammo;
 var map;
 var tileset;
@@ -34,6 +35,7 @@ var distanceText;
 
 var game = new Phaser.Game(config);
 
+// preloading assets
 function preload ()
 {
     this.load.image('tiles', 'assets/gridtiles2.png');
@@ -50,8 +52,13 @@ function preload ()
     this.load.image('alien', 'assets/space-baddie.png');
     this.load.image('bullet', 'assets/star.png');
     this.load.image('back', 'assets/background.png');
+    this.load.audio('sfx_select', './assets/select.wav');
+    this.load.audio('sfx_jump', './assets/jump.wav');
+    this.load.audio('sfx_shoot', './assets/shoot.wav');
+    
 }
 
+// creating assets 
 function create ()
 {
     background = this.add.sprite(400, 300, 'back');
@@ -124,15 +131,19 @@ function create ()
     this.physics.add.collider(player, movingPlatform);
 }
 
+// updating assets
 function update ()
 {
-    
+    // adds ammo over time
     ammo += 0.002;
     this.input.on('pointerdown', function (pointer) 
     {
+
+      // the player should not be able to shoot with 0 ammo
         if (ammocount(ammo) == true)
         {
         ammo -= 0.1;
+        this.sound.play('sfx_shoot');
         bullet = this.physics.add.sprite(player.x, player.y, 'star'); 
         target.x = pointer.x;
         target.y = pointer.y;
@@ -161,7 +172,6 @@ function update ()
     else
     {
         player.setVelocityX(0);
-
         player.anims.play('turn');
     }
 
@@ -169,7 +179,7 @@ function update ()
     {
         player.setVelocityY(-330);
     }
-
+    
     /*
     if (movingSaw1.x >= 500)
     {
@@ -184,10 +194,13 @@ function update ()
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 }
 
+// collect star function
 function collectStar (player, star)
 {
     star.disableBody(true, true);
 }
+
+// pick up function
 function hitPickup (player, tile)
 {
     map.removeTile(tile, 29, false);
@@ -196,6 +209,9 @@ function hitPickup (player, tile)
         return (tile.index === 82);
     });
 }
+
+// ammo count function
+// purpose: counts the ammo in game
 function ammocount (x)
 {
     if (x > 1)
