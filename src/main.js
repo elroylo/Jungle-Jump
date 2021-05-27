@@ -62,7 +62,7 @@ function preload ()
 function create ()
 {
     background = this.add.sprite(400, 300, 'back');
-    ammo = 2;
+    ammo = 1.2;
     text = this.add.text(10, 10, '', { fill: '#00ff00' }).setDepth(1);
     map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
     tileset = map.addTilesetImage('tiles');
