@@ -101,7 +101,7 @@ function create ()
 
     player = this.physics.add.sprite(100, 450, 'dude');
 
-    player.setBounce(0.2);
+    player.setBounce(0.01);
     player.setCollideWorldBounds(true);
     this.physics.add.collider(player, layer);
 
