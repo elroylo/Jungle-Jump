@@ -135,7 +135,10 @@ function create ()
 function update ()
 {
     // adds ammo over time
+    if (ammo <= 1.2)
+    {
     ammo += 0.002;
+    }
     this.input.on('pointerdown', function (pointer) 
     {
 
