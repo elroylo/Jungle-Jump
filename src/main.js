@@ -40,7 +40,7 @@ let keyA;
 let keyS;
 let keyD;
 let keyW;
-/*
+*/
 // preloading assets
 function preload ()
 {
