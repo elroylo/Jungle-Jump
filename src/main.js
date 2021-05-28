@@ -34,7 +34,13 @@ var target = new Phaser.Math.Vector2();
 var distanceText;
 
 var game = new Phaser.Game(config);
-
+/*
+reserving wasd for movement
+let keyA;
+let keyS;
+let keyD;
+let keyW;
+/*
 // preloading assets
 function preload ()
 {
@@ -52,9 +58,11 @@ function preload ()
     this.load.image('alien', './assets/space-baddie.png');
     this.load.image('bullet', './assets/star.png');
     this.load.image('back', './assets/background.png');
+    this.load.image('star_animation', './assets/star_animation.png');
     this.load.audio('sfx_select', './assets/select.wav');
     this.load.audio('sfx_jump', './assets/jump.wav');
     this.load.audio('sfx_shoot', './assets/shoot.wav');
+    
     
 }
 
@@ -78,6 +86,7 @@ function create ()
 
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
+    
     // platforms.create(600, 400, 'ground');
     // platforms.create(50, 250, 'ground');
     // platforms.create(750, 220, 'ground');
@@ -137,7 +146,7 @@ function update ()
     // adds ammo over time
     if (ammo <= 1.05)
     {
-    ammo += 0.002;
+        ammo += 0.002;
     }
     this.input.on('pointerdown', function (pointer) 
     {
