@@ -33,13 +33,12 @@ var source;
 var target = new Phaser.Math.Vector2();
 var distanceText;
 var distanceEnemy;
-var collision1 = false;
-var collision2 = false;
+var starCollision = false;
+var playerCollision = false;
 var gameOver = false;
-
+var score = 0;
 
 var game = new Phaser.Game(config);
-let gameOverText = add.text(320, 240, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
 
 /*
 reserving wasd for movement
@@ -157,20 +156,26 @@ function update ()
 {   
     // check collision
     /*
-    if (collision1 == false){
-        checkCollision1(stars, enemy);
+    if (starCollision == false){
+        checkStarCollision(stars, enemy);
     }*/
-    if (collision2 == false){
-        checkCollision2(player, enemy);
+    if (playerCollision == false){
+        checkPlayerCollision(player, enemy);
     }
     
 
     // detecting Game Over
-    if(collision2 == true){
+    if(playerCollision == true){
         gameOver = true;
     }
+    // full game over detection
+    /*
+    if(playerCollision == true || starCollision == true){
+        gameOver = true;
+    }
+    */
     if(gameOver == true){
-        gameOverText;
+        gameOverText = this.add.text(320, 240, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
     }
 
     // adds ammo over time
@@ -181,7 +186,7 @@ function update ()
     this.input.on('pointerdown', function (pointer) 
     {
 
-      // the player should not be able to shoot with 0 ammo
+        // the player should not be able to shoot with 0 ammo
         if (ammocount(ammo) == true)
         {
         ammo -= 0.1;
@@ -206,8 +211,8 @@ function update ()
         //'greaterthanone: ' + ammocount(ammo),
         //'Distance Enemy: ' + distanceEnemy,
         'Distance between Enemy: ' + Phaser.Math.Distance.BetweenPoints(player, enemy),
-        'Collision 1: ' + collision1,
-        'Collision 2: ' + collision2,
+        'Star Collision: ' + starCollision,
+        'Player Collision: ' + playerCollision,
         'Game Over: ' + gameOver,
     ]);
     
@@ -287,12 +292,12 @@ function ammocount (x)
     }
 }
 
-function checkCollision1(stars, enemy) {
+function checkStarCollision(stars, enemy) {
     if (stars.x < enemy.x + enemy.width && 
         stars.x + stars.width > enemy.x && 
         stars.y < enemy.y + enemy.height &&
         stars.height + stars.y > enemy. y){
-            collision1 = true;
+            starCollision = true;
             return true;
         }
         else{
@@ -300,12 +305,12 @@ function checkCollision1(stars, enemy) {
         }
 
 }
-function checkCollision2(star, enemy) {
+function checkPlayerCollision(player, enemy) {
     if (player.x < enemy.x + enemy.width && 
         player.x + player.width > enemy.x && 
         player.y < enemy.y + enemy.height &&
         player.height + player.y > enemy. y){
-            collision2 = true;
+            playerCollision = true;
             return true;
         }
         else{
