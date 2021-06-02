@@ -176,6 +176,10 @@ function update ()
     */
     if(gameOver == true){
         gameOverText = this.add.text(320, 240, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
+        restartText = this.add.text(290, 330, 'Press R to restart', { fontSize: '22px', fill: '#fff' });
+        if(KeyboardEvent == "r"){
+            
+        }
     }
 
     // adds ammo over time
@@ -189,16 +193,16 @@ function update ()
         // the player should not be able to shoot with 0 ammo
         if (ammocount(ammo) == true)
         {
-        ammo -= 0.1;
-        this.sound.play('sfx_shoot');
-        bullet = this.physics.add.sprite(player.x, player.y, 'star'); 
-        target.x = pointer.x;
-        target.y = pointer.y;
-        // Move at 200 px/s:
-        this.physics.moveToObject(bullet, target, 500);
-        this.physics.add.collider(bullet, layer);
-        bullet.setBounce(0.2);
-    }
+            ammo -= 0.1;
+            this.sound.play('sfx_shoot');
+            bullet = this.physics.add.sprite(player.x, player.y, 'star'); 
+            target.x = pointer.x;
+            target.y = pointer.y;
+            // Move at 500 px/s:
+            this.physics.moveToObject(bullet, target, 500);
+            this.physics.add.collider(bullet, layer);
+            bullet.setBounce(0.2);
+        }
     }, this);
     if(Phaser.Math.Distance.BetweenPoints(player, enemy) < 100){
         distanceEnemy = true;
