@@ -176,10 +176,12 @@ function update ()
     */
     if(gameOver == true){
         gameOverText = this.add.text(320, 240, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
-        restartText = this.add.text(290, 330, 'Press R to restart', { fontSize: '22px', fill: '#fff' });
-        if(KeyboardEvent == "r"){
-            
-        }
+        restartText = this.add.text(290, 330, 'Press <- to restart', { fontSize: '22px', fill: '#fff' });
+        // TODO: implement restart
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            debugText = this.add.text(10, 10, 'GAME OVER', { fontSize: '12px', fill: '#fff' });
+            this.scene.start("menuScene");
+            }
     }
 
     // adds ammo over time
@@ -218,6 +220,7 @@ function update ()
         'Star Collision: ' + starCollision,
         'Player Collision: ' + playerCollision,
         'Game Over: ' + gameOver,
+        'Score: ' + score
     ]);
     
     if (cursors.left.isDown)
@@ -278,6 +281,7 @@ function hitPickup (player, tile)
     map.removeTile(tile, 29, false);
 
     pickups = map.filterTiles(function (tile) {
+        score += 10;
         return (tile.index === 82);
     });
 }
