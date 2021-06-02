@@ -32,8 +32,15 @@ var debug;
 var source;
 var target = new Phaser.Math.Vector2();
 var distanceText;
+var distanceEnemy;
+var collision1 = false;
+var collision2 = false;
+var gameOver = false;
+
 
 var game = new Phaser.Game(config);
+let gameOverText = add.text(320, 240, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
+
 /*
 reserving wasd for movement
 let keyA;
@@ -114,6 +121,11 @@ function create ()
     player.setCollideWorldBounds(true);
     this.physics.add.collider(player, layer);
 
+    enemy = this.physics.add.sprite(550,450, 'alien');
+    //enemy2 = this.physics.add.sprite(1050,850, 'alien');
+    player.setCollideWorldBounds(true);
+    this.physics.add.collider(enemy, layer);
+
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -142,7 +154,25 @@ function create ()
 
 // updating assets
 function update ()
-{
+{   
+    // check collision
+    /*
+    if (collision1 == false){
+        checkCollision1(stars, enemy);
+    }*/
+    if (collision2 == false){
+        checkCollision2(player, enemy);
+    }
+    
+
+    // detecting Game Over
+    if(collision2 == true){
+        gameOver = true;
+    }
+    if(gameOver == true){
+        gameOverText;
+    }
+
     // adds ammo over time
     if (ammo <= 1.05)
     {
@@ -165,10 +195,22 @@ function update ()
         bullet.setBounce(0.2);
     }
     }, this);
+    if(Phaser.Math.Distance.BetweenPoints(player, enemy) < 100){
+        distanceEnemy = true;
+    }
+    else{
+        distanceEnemy = false;
+    }
     text.setText([
         'ammo: ' + ammo,
-        'greaterthanone: ' + ammocount(ammo),
+        //'greaterthanone: ' + ammocount(ammo),
+        //'Distance Enemy: ' + distanceEnemy,
+        'Distance between Enemy: ' + Phaser.Math.Distance.BetweenPoints(player, enemy),
+        'Collision 1: ' + collision1,
+        'Collision 2: ' + collision2,
+        'Game Over: ' + gameOver,
     ]);
+    
     if (cursors.left.isDown)
     {
         player.setVelocityX(-320);
@@ -205,6 +247,15 @@ function update ()
     this.physics.world.overlapTiles(player, pickups, hitPickup, null, this);
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 }
+//
+// end of update
+//
+
+function reset(){
+
+
+
+}
 
 // collect star function
 function collectStar (player, star)
@@ -236,4 +287,29 @@ function ammocount (x)
     }
 }
 
+function checkCollision1(stars, enemy) {
+    if (stars.x < enemy.x + enemy.width && 
+        stars.x + stars.width > enemy.x && 
+        stars.y < enemy.y + enemy.height &&
+        stars.height + stars.y > enemy. y){
+            collision1 = true;
+            return true;
+        }
+        else{
+            return false;
+        }
 
+}
+function checkCollision2(star, enemy) {
+    if (player.x < enemy.x + enemy.width && 
+        player.x + player.width > enemy.x && 
+        player.y < enemy.y + enemy.height &&
+        player.height + player.y > enemy. y){
+            collision2 = true;
+            return true;
+        }
+        else{
+            return false;
+        }
+
+}
