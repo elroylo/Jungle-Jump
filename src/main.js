@@ -157,8 +157,6 @@ function create ()
 
     fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#D5E27B' }).setDepth(1);
     scoretext = this.add.text(player.x, player.y - 30, '', { fill: '#D5E27B' }).setDepth(1);
-
-    // timer implementation
 }
 
 // updating assets
