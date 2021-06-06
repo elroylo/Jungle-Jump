@@ -284,6 +284,8 @@ function hitPickup (player, tile)
 
     pickups = map.filterTiles(function (tile) {
         score += 10;
+        fuel = 2000;
+        
         return (tile.index === 82);
     });
 }
