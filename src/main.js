@@ -41,7 +41,7 @@ var jumps;
 var canDoubleJump;
 var speedinc = 0;
 var xyinc;
-var fuel = 1000;
+var fuel = 2000;
 
 var game = new Phaser.Game(config);
 
@@ -82,8 +82,8 @@ function create ()
 {
     background = this.add.sprite(400, 300, 'back');
     //  Set the camera and physics bounds to be the size of 4x4 bg images
-    this.cameras.main.setBounds(0, 0, 1920 * 2, 1080 * 2);
-    this.physics.world.setBounds(0, 0, 1920 * 2, 1080 * 2);
+    this.cameras.main.setBounds(0, 0, 800 * 2, 600 * 2);
+    //this.physics.world.setBounds(0, 0, 800 * 2, 600 * 2);
 
     ammo = 1.05;
     text = this.add.text(10, 10, '', { fill: '#00ff00' }).setDepth(1);
@@ -127,8 +127,11 @@ function create ()
     player.setBounce(0.01);
     player.setCollideWorldBounds(true);
     this.physics.add.collider(player, layer);
-    this.cameras.main.startFollow(player);
-    this.cameras.main.followOffset.set(-300, 0);
+
+    this.cameras.main.startFollow(player, true, 0.09, 0.09);
+    this.cameras.main.setZoom(1.25);
+    //this.cameras.main.startFollow(player);
+    //this.cameras.main.followOffset.set(-200, 0);
 
     //enemy2 = this.physics.add.sprite(1050,850, 'alien');
     player.setCollideWorldBounds(true);
@@ -157,8 +160,9 @@ function create ()
     this.physics.add.collider(player, platforms);
     //this.physics.add.collider(player, movingSaw1);
     this.physics.add.collider(player, movingPlatform);
-    fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#00ff00' }).setDepth(1);
 
+    fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#00ff00' }).setDepth(1);
+    scoretext = this.add.text(player.x, player.y - 30, '', { fill: '#00ff00' }).setDepth(1);
 
     // timer implementation
     timedEvent = this.time.addEvent({ delay: 60000, callback: onEvent, callbackScope: this,  startAt: 60000 });
@@ -169,6 +173,8 @@ function update ()
 {   
     fueltext.x = player.x;
     fueltext.y = player.y - 20;
+    scoretext.x = player.x;
+    scoretext.y = player.y - 40;
     // detecting Game Over
     if(playerCollision == true){
         gameOver = true;
@@ -194,6 +200,9 @@ function update ()
     fueltext.setText([
         'fuel:' + fuel,
     ]);
+    scoretext.setText([
+        'score:' + score,
+    ]);
     //timedEvent = this.time.addEvent({ delay: 6000000, callback: this.onClockEvent, callbackScope: this, repeat: 1 }); 
     //text.setText('Game Clock: ' + timedEvent.getElapsedSeconds().toString().substr(0, 4));  
 
@@ -201,19 +210,27 @@ function update ()
     {
         player.setVelocityX(-320);
         player.anims.play('left', true);
-        this.cameras.main.followOffset.x = 300;
+        player.x -= 2.5;
+
+        //this.cameras.main.followOffset.x = 300;
     }
     else if (cursors.right.isDown)
     {
         player.setVelocityX(320);
         player.anims.play('right', true);
-        this.cameras.main.followOffset.x = -300;
+        player.x += 2.5;
+
+        //this.cameras.main.followOffset.x = -300;
     }
     else
     {
         player.setVelocityX(0);
         player.anims.play('turn');
+        
+        //this.cameras.main.followOffset.x = -300;
     }
+
+
     
 
     if (cursors.up.isDown && speedinc >= -300 && fuel >= 10)
