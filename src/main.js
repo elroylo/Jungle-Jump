@@ -16,34 +16,28 @@ var config = {
         update: update
     }
 };
+var game = new Phaser.Game(config);
+
 // declaring variables
-var ammo;
+//var ammo;
 var map;
 var tileset;
 var layer;
 var pickups;
 var player;
-var stars;
-var bullet;
 var platforms;
 var cursors;
 var movingPlatform;
 var debug;
 var source;
 var target = new Phaser.Math.Vector2();
-var distanceText;
-var distanceEnemy;
-var starCollision = false;
 var playerCollision = false;
 var gameOver = false;
 var score = 0;
-var jumps;
-var canDoubleJump;
 var speedinc = 0;
 var xyinc;
 var fuel = 2000;
 
-var game = new Phaser.Game(config);
 
 /*
 reserving wasd for movement
@@ -161,11 +155,10 @@ function create ()
     //this.physics.add.collider(player, movingSaw1);
     this.physics.add.collider(player, movingPlatform);
 
-    fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#00ff00' }).setDepth(1);
-    scoretext = this.add.text(player.x, player.y - 30, '', { fill: '#00ff00' }).setDepth(1);
+    fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#D5E27B' }).setDepth(1);
+    scoretext = this.add.text(player.x, player.y - 30, '', { fill: '#D5E27B' }).setDepth(1);
 
     // timer implementation
-    timedEvent = this.time.addEvent({ delay: 60000, callback: onEvent, callbackScope: this,  startAt: 60000 });
 }
 
 // updating assets
@@ -189,13 +182,11 @@ function update ()
             this.scene.start("menuScene");
             }
     }
-    timedEvent = this.time.addEvent({ delay: 60000, callback: onEvent, callbackScope: this, repeat: 60000, startAt: 60000 });
     
     text.setText([
         'Game Over: ' + gameOver,
         'Score: ' + score,
         'speed:' + speedinc,
-        'Time: ' + timedEvent.getElapsedSeconds().toString().substr(0, 4),
     ]);
     fueltext.setText([
         'fuel:' + fuel,
@@ -203,8 +194,7 @@ function update ()
     scoretext.setText([
         'score:' + score,
     ]);
-    //timedEvent = this.time.addEvent({ delay: 6000000, callback: this.onClockEvent, callbackScope: this, repeat: 1 }); 
-    //text.setText('Game Clock: ' + timedEvent.getElapsedSeconds().toString().substr(0, 4));  
+
 
     if (cursors.left.isDown)
     {
@@ -212,7 +202,7 @@ function update ()
         player.anims.play('left', true);
         player.x -= 2.5;
 
-        //this.cameras.main.followOffset.x = 300;
+
     }
     else if (cursors.right.isDown)
     {
@@ -220,14 +210,12 @@ function update ()
         player.anims.play('right', true);
         player.x += 2.5;
 
-        //this.cameras.main.followOffset.x = -300;
     }
     else
     {
         player.setVelocityX(0);
         player.anims.play('turn');
-        
-        //this.cameras.main.followOffset.x = -300;
+
     }
 
 
@@ -240,7 +228,7 @@ function update ()
         fuel -= 10;
         
     }
-    else if (speedinc <= 10 && fuel < 2000 )
+    else if (speedinc <= 10 && fuel < 2100 )
     {
         player.setVelocityY(speedinc);
         speedinc += 15;
@@ -303,20 +291,4 @@ function checkPlayerCollision(player, enemy) {
             return false;
         }
 
-}
-// timer
-function onEvent ()
-{
-    this.initialTime -= 1; // One second
-    text.setText('Countdown: ' + formatTime(this.initialTime));
-}
-function formatTime(seconds){
-    // Minutes
-    var minutes = Math.floor(seconds/60);
-    // Seconds
-    var partInSeconds = seconds%60;
-    // Adds left zeros to seconds
-    partInSeconds = partInSeconds.toString().padStart(2,'0');
-    // Returns formated time
-    return `${minutes}:${partInSeconds}`;
 }
