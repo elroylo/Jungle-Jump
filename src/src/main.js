@@ -81,10 +81,6 @@ function preload ()
 function create ()
 {
     background = this.add.sprite(400, 300, 'back');
-    //  Set the camera and physics bounds to be the size of 4x4 bg images
-    this.cameras.main.setBounds(0, 0, 1920 * 2, 1080 * 2);
-    this.physics.world.setBounds(0, 0, 1920 * 2, 1080 * 2);
-
     ammo = 1.05;
     text = this.add.text(10, 10, '', { fill: '#00ff00' }).setDepth(1);
     map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
@@ -124,11 +120,10 @@ function create ()
     */
 
     player = this.physics.add.sprite(100, 450, 'dude');
+
     player.setBounce(0.01);
     player.setCollideWorldBounds(true);
     this.physics.add.collider(player, layer);
-    this.cameras.main.startFollow(player);
-    this.cameras.main.followOffset.set(-300, 0);
 
     //enemy2 = this.physics.add.sprite(1050,850, 'alien');
     player.setCollideWorldBounds(true);
@@ -158,10 +153,6 @@ function create ()
     //this.physics.add.collider(player, movingSaw1);
     this.physics.add.collider(player, movingPlatform);
     fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#00ff00' }).setDepth(1);
-
-
-    // timer implementation
-    timedEvent = this.time.addEvent({ delay: 60000, callback: onEvent, callbackScope: this,  startAt: 60000 });
 }
 
 // updating assets
@@ -183,38 +174,33 @@ function update ()
             this.scene.start("menuScene");
             }
     }
-    timedEvent = this.time.addEvent({ delay: 60000, callback: onEvent, callbackScope: this, repeat: 60000, startAt: 60000 });
-    
+
     text.setText([
         'Game Over: ' + gameOver,
         'Score: ' + score,
         'speed:' + speedinc,
-        'Time: ' + timedEvent.getElapsedSeconds().toString().substr(0, 4),
     ]);
     fueltext.setText([
         'fuel:' + fuel,
     ]);
-    //timedEvent = this.time.addEvent({ delay: 6000000, callback: this.onClockEvent, callbackScope: this, repeat: 1 }); 
-    //text.setText('Game Clock: ' + timedEvent.getElapsedSeconds().toString().substr(0, 4));  
-
+    
     if (cursors.left.isDown)
     {
         player.setVelocityX(-320);
+
         player.anims.play('left', true);
-        this.cameras.main.followOffset.x = 300;
     }
     else if (cursors.right.isDown)
     {
         player.setVelocityX(320);
+
         player.anims.play('right', true);
-        this.cameras.main.followOffset.x = -300;
     }
     else
     {
         player.setVelocityX(0);
         player.anims.play('turn');
     }
-    
 
     if (cursors.up.isDown && speedinc >= -300 && fuel >= 10)
     {
@@ -271,6 +257,8 @@ function hitPickup (player, tile)
     });
 }
 
+// ammo count function
+// purpose: counts the ammo in game
 
 function checkPlayerCollision(player, enemy) {
     if (player.x < enemy.x + enemy.width && 
@@ -284,20 +272,4 @@ function checkPlayerCollision(player, enemy) {
             return false;
         }
 
-}
-// timer
-function onEvent ()
-{
-    this.initialTime -= 1; // One second
-    text.setText('Countdown: ' + formatTime(this.initialTime));
-}
-function formatTime(seconds){
-    // Minutes
-    var minutes = Math.floor(seconds/60);
-    // Seconds
-    var partInSeconds = seconds%60;
-    // Adds left zeros to seconds
-    partInSeconds = partInSeconds.toString().padStart(2,'0');
-    // Returns formated time
-    return `${minutes}:${partInSeconds}`;
 }
