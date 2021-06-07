@@ -1,6 +1,6 @@
-class Menu extends Phaser.Scene {
+class Credits extends Phaser.Scene {
     constructor() {
-        super("menuScene");
+        super("creditsScene");
     }
     preload() {
         // load audio
@@ -14,8 +14,8 @@ class Menu extends Phaser.Scene {
       {
         this.sound.play('sfx_music');
       }*/
-    // menu text configuration
-        let menuConfig = {
+    // credits text configuration
+        let creditsConfig = {
             fontFamily: 'Times',
             fontSize: '28px',
             backgroundColor: '#ff0000',
@@ -29,12 +29,12 @@ class Menu extends Phaser.Scene {
         
     }
 
-    //show menu text
-    this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'Jungle Jump', menuConfig).setOrigin(0.5);
-    this.add.text(game.config.width/2, game.config.height/2, 'Use the arrowkeys to move and right mouse click to shoot.', menuConfig).setOrigin(0.5);
-    menuConfig.backgroundColor = '#0fFFf0';
-    menuConfig.config = '#000';
-    this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press <- to play', menuConfig).setOrigin(0.5);
+    //show credits text
+    this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'Credits:', creditsConfig).setOrigin(0.5);
+    this.add.text(game.config.width/2, game.config.height/2, 'Gabriel and Elroy were our programmers, Mariel handled art and level design, and Gabriel did our sound design.', creditsConfig).setOrigin(0.5);
+    creditsConfig.backgroundColor = '#0fFFf0';
+    creditsConfig.config = '#000';
+    this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press <- to play again', creditsConfig).setOrigin(0.5);
     //this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Your Previous Score', gameOverScore).setOrigin(0.5);
     this.gameHighScore = this.add.text(300, 160, 'Your highest score: ' + highscore, { fontSize: '20px', fill: '#fff' });
     this.gameOverScore = this.add.text(300, 200, 'Your last score: ' + gameOverScore, { fontSize: '18px', fill: '#fff' });

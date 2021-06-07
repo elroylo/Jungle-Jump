@@ -116,40 +116,45 @@ class Play extends Phaser.Scene {
         //this.GameOverText.y = player.y;
         // detecting Game Over
         if(this.checkPlayerCollision(player, movingPlatform3) == true){
-            gameOver = true;
+            game.global.gameOver = true;
         }
         //if(this.playerCollision == true){
         //    this.gameOver = true;
         //}
         // full game over detection
-        if(gameOver == true && gameOverTest == 0){
+        if(game.global.gameOver == true && game.global.gameOverTest == 0){
+            game.global.gameOverTest = 1;
             this.gameOverText = this.add.text(player.x, player.y, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
             this.restartText = this.add.text(player.x - 30, player.y + 90, 'Press <- to restart', { fontSize: '22px', fill: '#fff' });
             // don't delete these test casts vv
             // player.x, player.y,
             // 320, 240
             // 290, 330
-
-            // TODO: implement restart
-            if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-                this.debugText = this.add.text(10, 10, 'GAME OVER', { fontSize: '12px', fill: '#fff' });
-                this.scene.start("menuScene");
-            }
-            gameOverTest += 1;
+            //this.scene.start("menuScene");
         }
+        if(game.global.gameOver == true && game.global.gameOverTest == 1){
+            //keypresstest = false;
+            //if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            gameOverScore = game.global.score;
+            if(highscore < gameOverScore){
+                highscore = gameOverScore;
+            }
+            this.scene.start("menuScene");
+            //}
+        }    
         
         this.text.setText([
-            'Game Over: ' + gameOver,
-            'Score: ' + score,
+            'Game Over: ' + game.global.gameOver,
+            'Score: ' + game.global.score,
             'speed:' + speedinc,
-            'gm_test: ' + gameOverTest,
+            'gm_test: ' + game.global.gameOverTest,
             "check collision: " + this.checkPlayerCollision(player, movingPlatform3),
         ]);
         this.fueltext.setText([
             'fuel:' + fuel,
         ]);
         this.scoretext.setText([
-            'score:' + score,
+            'score:' + game.global.score,
         ]);
         //this.gameOverText.setText([
         //    'Game Over'
@@ -160,8 +165,6 @@ class Play extends Phaser.Scene {
             player.setVelocityX(-320);
             player.anims.play('left', true);
             player.x -= 2.5;
-
-
         }
         else if (cursors.right.isDown)
         {
@@ -235,7 +238,7 @@ hitPickup (player, tile)
     this.map.removeTile(tile, 29, false);
 
     this.pickups = this.map.filterTiles(function (tile) {
-        score += 10;
+        game.global.score += 10;
         fuel = 2000;
         
         return (tile.index === 82);
