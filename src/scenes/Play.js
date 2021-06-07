@@ -22,8 +22,19 @@ class Play extends Phaser.Scene {
         this.load.image('star_animation', './assets/star_animation.png');
         this.load.audio('sfx_select', './assets/select.wav');
         this.load.audio('sfx_jump', './assets/jump.wav');
-        this.load.audio('sfx_shoot', './assets/shoot.wav');
+        this.load.audio('sfx_fruit', './assets/fruit.wav');
+        this.load.audio('sfx_jetpack', './assets/jetpack.wav');
+        this.load.audio('sfx_death', './assets/death.wav');
     }
+/*
+    preload() {
+        // load audio
+        this.load.audio('sfx_jetpack', './assets/select.wav');
+        this.load.audio('sfx_death', './assets/death.wav');
+        this.load.audio('sfx_fruit', './assets/select.wav');
+    }
+    */
+
     create () {
         this.background = this.add.sprite(400, 300, 'back');
         //  Set the camera and physics bounds to be the size of 4x4 bg images
@@ -35,7 +46,7 @@ class Play extends Phaser.Scene {
         this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
         this.tileset = this.map.addTilesetImage('tiles');
         this.layer = this.map.createLayer('Level1', this.tileset);
-        
+        this.initialTime = 480;
         
         this.map.setCollision([ 20, 48 ]);
 
@@ -45,7 +56,7 @@ class Play extends Phaser.Scene {
 
         this.platforms = this.physics.add.staticGroup();
 
-        ////this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+        //this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
         movingPlatform2 = this.physics.add.image(400, 400, 'moving_platform');
         movingPlatform2.setImmovable(true);
@@ -102,7 +113,8 @@ class Play extends Phaser.Scene {
         this.fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#D5E27B' }).setDepth(1);
         this.scoretext = this.add.text(player.x, player.y - 30, '', { fill: '#D5E27B' }).setDepth(1);
 
-        
+        timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+
     }
 
     // updating assets
@@ -114,6 +126,9 @@ class Play extends Phaser.Scene {
         this.scoretext.y = player.y - 40;
         //this.gameOverText.x = player.x;
         //this.GameOverText.y = player.y;
+
+        
+
         // detecting Game Over
         if(this.checkPlayerCollision(player, movingPlatform3) == true){
             game.global.gameOver = true;
@@ -141,7 +156,8 @@ class Play extends Phaser.Scene {
             }
             this.scene.start("menuScene");
             //}
-        }    
+        }   
+        if(this.gameCom) 
         
         this.text.setText([
             'Game Over: ' + game.global.gameOver,
@@ -149,6 +165,8 @@ class Play extends Phaser.Scene {
             'speed:' + speedinc,
             'gm_test: ' + game.global.gameOverTest,
             "check collision: " + this.checkPlayerCollision(player, movingPlatform3),
+            //"Progress: " + timedEvent.getProgress().toString().substr(0, 4) + "%",
+            'Countdown: ' + this.formatTime(this.initialTime),
         ]);
         this.fueltext.setText([
             'fuel:' + fuel,
@@ -156,9 +174,7 @@ class Play extends Phaser.Scene {
         this.scoretext.setText([
             'score:' + game.global.score,
         ]);
-        //this.gameOverText.setText([
-        //    'Game Over'
-        //]);
+     
 
         if (cursors.left.isDown)
         {
@@ -259,6 +275,22 @@ checkPlayerCollision(player, deadlyplatform) {
         }
 
 }
+formatTime(seconds){
+    // Minutes
+    var minutes = Math.floor(seconds/60);
+    // Seconds
+    var partInSeconds = seconds%60;
+    // Adds left zeros to seconds
+    partInSeconds = partInSeconds.toString().padStart(2,'0');
+    // Returns formated time
+    return `${minutes}:${partInSeconds}`;
+}
 
+
+onEvent ()
+{
+    this.initialTime -= 1; // One second
+    this.text.setText('Countdown: ' + this.formatTime(this.initialTime));
+}
  
 }

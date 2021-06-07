@@ -39,7 +39,9 @@ var movingPlatform1, movingPlatform2, movingPlatform3;
 var highscore = 0;
 var gameOverScore = 0;
 var gameCompleted;
-
+var text;
+var timedEvent;
+var scoreMultiplier;
 // global vars
 game.global = {
     gameOver: false,
