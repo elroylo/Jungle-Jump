@@ -134,7 +134,7 @@ function create ()
     this.physics.add.collider(player, layer);
 
     this.cameras.main.startFollow(player, true, 0.09, 0.09);
-    this.cameras.main.setZoom(1.25);
+    this.cameras.main.setZoom(1);
     
     player.setCollideWorldBounds(true);
 
@@ -211,30 +211,25 @@ function update ()
     scoretext.setText([
         'score:' + score,
     ]);
-    gameoverText.setText([
-        
-    ])
+    //gameoverText.setText([
+    //])
 
     if (cursors.left.isDown)
     {
         player.setVelocityX(-320);
         player.anims.play('left', true);
         player.x -= 2.5;
-
-
     }
     else if (cursors.right.isDown)
     {
         player.setVelocityX(320);
         player.anims.play('right', true);
         player.x += 2.5;
-
     }
     else
     {
         player.setVelocityX(0);
         player.anims.play('turn');
-
     }
 
 
