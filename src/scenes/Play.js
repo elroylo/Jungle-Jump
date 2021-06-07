@@ -53,7 +53,8 @@ class Play extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
 
         //this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-
+        
+        // creates the moving platforms that will be generated throughout the map
         movingPlatform2 = this.physics.add.image(1600, 1100, 'moving_platform');
         movingPlatform2.setImmovable(true);
         movingPlatform2.body.allowGravity = false;
@@ -80,11 +81,11 @@ class Play extends Phaser.Scene {
         
         this.physics.add.collider(player, this.layer);
 
+        // creates the camera follow and fixed zoom
         this.cameras.main.startFollow(player, true, 0.09, 0.09);
         this.cameras.main.setZoom(1);
 
         // player and platform collider
-
         this.physics.add.collider(player, movingPlatform2);
         this.physics.add.collider(player, movingPlatform3);
         this.physics.add.collider(player, movingPlatform4);
@@ -144,6 +145,7 @@ class Play extends Phaser.Scene {
         //if(this.playerCollision == true){
         //    this.gameOver = true;
         //}
+
         // full game over detection
         if(game.global.gameOver == true && game.global.gameOverTest == 0){
             game.global.gameOverTest = 1;
@@ -156,7 +158,6 @@ class Play extends Phaser.Scene {
             }
             this.musicPlaying.stop();
             this.scene.start("menuScene");
-            //}
         }   
         
         this.text.setText([
