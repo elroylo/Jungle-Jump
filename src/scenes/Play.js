@@ -277,7 +277,7 @@ hitPickup (player, tile)
     this.map.removeTile(tile, 29, false);
 
     this.pickups = this.map.filterTiles(function (tile) {
-        game.global.score += 1;
+        game.global.score += 0.5;
         return (tile.index === 82);
     });
 }
