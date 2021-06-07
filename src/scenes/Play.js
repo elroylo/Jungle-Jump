@@ -24,16 +24,17 @@ class Play extends Phaser.Scene {
         this.load.image('star_animation', './assets/star_animation.png');
         this.load.audio('sfx_select', './assets/select.wav');
         this.load.audio('sfx_jump', './assets/jump.wav');
-        this.load.audio('sfx_fruit', './assets/fruit.wav');
+        this.load.audio('sfx_apple', './assets/apple.wav');
+        this.load.audio('sfx_pear', './assets/pear.wav')
         this.load.audio('sfx_jetpack', './assets/jetpack.wav');
         this.load.audio('sfx_death', './assets/death.wav');
     }
 /*
     preload() {
         // load audio
-        this.load.audio('sfx_jetpack', './assets/select.wav');
+        this.load.audio('sfx_jetpack', './assets/jetpack.wav');
         this.load.audio('sfx_death', './assets/death.wav');
-        this.load.audio('sfx_fruit', './assets/select.wav');
+        this.load.audio('sfx_fruit', './assets/fruit.wav');
     }
     */
 
@@ -48,6 +49,7 @@ class Play extends Phaser.Scene {
         this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
         this.tileset = this.map.addTilesetImage('tiles');
         this.layer = this.map.createLayer('Tile_Layer_1', this.tileset);
+        // game clock time of 8 minutes
         this.initialTime = 480;
         
         this.map.setCollision([ 20, 48, 57, 58, 59, 71, 72, 73, 85, 86, 87, 99, 100, 101, 113, 114, 115, 127, 128, 129]);
@@ -148,6 +150,7 @@ class Play extends Phaser.Scene {
             game.global.gameOverTest = 1;
             this.gameOverText = this.add.text(player.x, player.y, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
             this.restartText = this.add.text(player.x - 30, player.y + 90, 'Press <- to restart', { fontSize: '22px', fill: '#fff' });
+            this.sound.play('sfx_death');
             // don't delete these test casts vv
             // player.x, player.y,
             // 320, 240
@@ -155,8 +158,6 @@ class Play extends Phaser.Scene {
             //this.scene.start("menuScene");
         }
         if(game.global.gameOver == true && game.global.gameOverTest == 1){
-            //keypresstest = false;
-            //if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             gameOverScore = game.global.score;
             if(highscore < gameOverScore){
                 highscore = gameOverScore;
@@ -164,7 +165,6 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
             //}
         }   
-        if(this.gameCom) 
         
         this.text.setText([
             'Game Over: ' + game.global.gameOver,
@@ -211,6 +211,7 @@ class Play extends Phaser.Scene {
             player.setVelocityY(speedinc);
             speedinc -= 10;
             fuel -= 10;
+            this.sound.play('sfx_jetpack');
             
         }
         else if (speedinc <= 10 && fuel < 2100 )
@@ -222,6 +223,7 @@ class Play extends Phaser.Scene {
         {
             fuel += 10;
             speedinc = 10
+            
         }
         
         
@@ -264,6 +266,7 @@ reset(){
 // pick up function
 hitPickup (player, tile)
 {
+    this.sound.play('sfx_apple');
     this.map.removeTile(tile, 29, false);
 
     this.pickups = this.map.filterTiles(function (tile) {
@@ -274,8 +277,9 @@ hitPickup (player, tile)
 
 hitPickup2 (player, tile)
 {
+    this.sound.play('sfx_pear');
     this.map.removeTile(tile, 29, false);
-
+    
     this.pickups2 = this.map.filterTiles(function (tile) {
         fuel = 2000;
         return (tile.index === 83);

@@ -42,6 +42,7 @@ var gameCompleted;
 var text;
 var timedEvent;
 var scoreMultiplier;
+var sfxfruit, sfxdeath, sfxjetpack;
 // global vars
 game.global = {
     gameOver: false,
