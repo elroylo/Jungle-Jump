@@ -75,7 +75,7 @@ class Play extends Phaser.Scene {
         movingPlatform3.setVelocityY(50);
         
 
-        player = this.physics.add.sprite(100, 450, 'dude');
+        player = this.physics.add.sprite(200, 450, 'dude');
         player.setBounce(0.01);
         
         this.physics.add.collider(player, this.layer);
@@ -124,6 +124,9 @@ class Play extends Phaser.Scene {
     // updating assets
     update ()
     {   
+        // score multiplier
+        scoreMultiplier = this.initialTime/25;
+
         this.fueltext.x = player.x;
         this.fueltext.y = player.y - 20;
         this.scoretext.x = player.x;
@@ -264,7 +267,7 @@ hitPickup (player, tile)
     this.map.removeTile(tile, 29, false);
 
     this.pickups = this.map.filterTiles(function (tile) {
-        game.global.score += 10;
+        game.global.score += 1;
         return (tile.index === 82);
     });
 }
@@ -286,7 +289,11 @@ hitdead ()
 
 escape ()
 {
-    score = (score * this.initialTime/10)
+   // game.global.score = (game.global.score * scoreMultiplier);
+    gameOverScore = game.global.score * scoreMultiplier;
+    if(highscore < gameOverScore){
+        highscore = gameOverScore;
+    }
     this.scene.start('creditsScene');
 }
 
