@@ -2,26 +2,17 @@ class Play extends Phaser.Scene {
     constructor() {
         super("playScene");
     }
+    
+    // loads images, tilemaps, audios, and backgrounds
     preload () {
         this.load.image('tiles', './assets/gridtiles_1.png');
         this.load.tilemapTiledJSON('map', './assets/junglejump1.json');
-        this.load.tilemapTiledJSON('map1', './assets/simple-map.json');
         this.load.image('sky', './assets/sky.png');
         this.load.image('moving_platform', './assets/movingplatform.png');
-        this.load.image('deadly_platform', './assets/deadlyplatform.png');
         this.load.image('ground', './assets/platform.png');
-        this.load.image('saw1', './assets/spike1.png');
-        this.load.image('saw2', './assets/platform.png');
-        this.load.image('saw3', './assets/platform.png');
-        this.load.image('star', './assets/star.png');
         this.load.spritesheet('dude', './assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-        this.load.image('sun', './assets/sun.png');
-        this.load.image('alien', './assets/space-baddie.png');
-        this.load.image('bullet', './assets/star.png');
         this.load.image('back', './assets/background.png');
-        this.load.image('star_animation', './assets/star_animation.png');
         this.load.audio('sfx_select', './assets/select.wav');
-        this.load.audio('sfx_jump', './assets/jump.wav');
         this.load.audio('sfx_music', './assets/JungleJump.wav');
         this.load.audio('sfx_apple', './assets/apple.wav');
         this.load.audio('sfx_pear', './assets/pear.wav')
