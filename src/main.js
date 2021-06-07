@@ -37,6 +37,7 @@ var score = 0;
 var speedinc = 0;
 var xyinc;
 var fuel = 2000;
+var gameOverTest = 0;
 
 
 /*
@@ -53,6 +54,8 @@ function preload ()
     this.load.image('tiles', './assets/gridtiles2.png');
     this.load.tilemapTiledJSON('map', './assets/simple-map.json');
     this.load.image('sky', './assets/sky.png');
+    this.load.image('moving_platform', './assets/movingplatform.png');
+    this.load.image('deadly_platform', './assets/deadlyplatform.png');
     this.load.image('ground', './assets/platform.png');
     this.load.image('saw1', './assets/spike1.png');
     this.load.image('saw2', './assets/platform.png');
@@ -95,27 +98,35 @@ function create ()
 
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
+    // saw 1 test
+    /*
+    movingSaw1 = this.physics.add.image(300, 300, 'saw3');
+    movingSaw1.setImmovable(true);
+    movingSaw1.body.allowGravity = false;
+    movingSaw1.setVelocityX(50);
+    */
     
     // platforms.create(600, 400, 'ground');
     // platforms.create(50, 250, 'ground');
     // platforms.create(750, 220, 'ground');
-
-    /* movingSaw1 = this.physics.add.image(400, 400, 'saw1');
+    
+    /*
+    movingSaw1 = this.physics.add.image(400, 400, 'saw1');
     movingSaw1.scaleX= 2.5;
     movingSaw1.setImmovable(true);
     movingSaw1.body.allowGravity = false;
     movingSaw1.setVelocityY(80);
-
-    movingSaw2 = this.physics.add.image(400, 400, 'saw2');
+    */
+    movingSaw2 = this.physics.add.image(400, 400, 'moving_platform');
     movingSaw2.setImmovable(true);
     movingSaw2.body.allowGravity = false;
-    movingSaw2.setVelocityX(100);
+    movingSaw2.setVelocityX(50);
 
-    movingSaw3 = this.physics.add.image(400, 400, 'saw3');
+    movingSaw3 = this.physics.add.image(400, 400, 'deadly_platform');
     movingSaw3.setImmovable(true);
     movingSaw3.body.allowGravity = false;
-    movingSaw3.setVelocityY(150);
-    */
+    movingSaw3.setVelocityY(50);
+    
 
     player = this.physics.add.sprite(100, 450, 'dude');
     player.setBounce(0.01);
@@ -124,11 +135,15 @@ function create ()
 
     this.cameras.main.startFollow(player, true, 0.09, 0.09);
     this.cameras.main.setZoom(1.25);
-    //this.cameras.main.startFollow(player);
-    //this.cameras.main.followOffset.set(-200, 0);
-
-    //enemy2 = this.physics.add.sprite(1050,850, 'alien');
+    
     player.setCollideWorldBounds(true);
+
+    // player and platform collider
+    this.physics.add.collider(player, platforms);
+    //this.physics.add.collider(player, movingSaw1);
+    this.physics.add.collider(player, movingSaw2);
+    this.physics.add.collider(player, movingSaw3);
+
 
     this.anims.create({
         key: 'left',
@@ -151,12 +166,10 @@ function create ()
     });
 
     cursors = this.input.keyboard.createCursorKeys();
-    this.physics.add.collider(player, platforms);
-    //this.physics.add.collider(player, movingSaw1);
-    this.physics.add.collider(player, movingPlatform);
+    
 
-    fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#D5E27B' }).setDepth(1);
-    scoretext = this.add.text(player.x, player.y - 30, '', { fill: '#D5E27B' }).setDepth(1);
+    fueltext = this.add.text(player.x - 200, player.y - 20, '', { fill: '#D5E27B' }).setDepth(1);
+    scoretext = this.add.text(player.x - 200, player.y - 30, '', { fill: '#D5E27B' }).setDepth(1);
 }
 
 // updating assets
@@ -167,18 +180,24 @@ function update ()
     scoretext.x = player.x;
     scoretext.y = player.y - 40;
     // detecting Game Over
-    if(playerCollision == true){
+    if(checkPlayerCollision(player, movingSaw3) == true){
         gameOver = true;
     }
     // full game over detection
-    if(gameOver == true){
-        gameOverText = this.add.text(320, 240, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
-        restartText = this.add.text(290, 330, 'Press <- to restart', { fontSize: '22px', fill: '#fff' });
+    if(gameOver == true && gameOverTest == 0){
+        gameOverText = this.add.text(player.x, player.y, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
+        restartText = this.add.text(player.x - 30, player.y + 90, 'Press <- to restart', { fontSize: '22px', fill: '#fff' });
+        // don't delete these test casts vv
+        // player.x, player.y,
+        // 320, 240
+        // 290, 330
+
         // TODO: implement restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             debugText = this.add.text(10, 10, 'GAME OVER', { fontSize: '12px', fill: '#fff' });
             this.scene.start("menuScene");
             }
+        gameOverTest += 1;
     }
     
     text.setText([
@@ -192,7 +211,9 @@ function update ()
     scoretext.setText([
         'score:' + score,
     ]);
-
+    gameoverText.setText([
+        
+    ])
 
     if (cursors.left.isDown)
     {
@@ -237,17 +258,25 @@ function update ()
         speedinc = 10
     }
     
+    // update for moving platform
+    if (movingSaw2.x >= 500)
+    {
+        movingSaw2.setVelocityX(-50);
+    }
+    else if (movingSaw2.x <= 300)
+    {
+        movingSaw2.setVelocityX(50);
+    }
+    if (movingSaw3.y >= 500)
+    {
+        movingSaw3.setVelocityY(-50);
+    }
+    else if (movingSaw3.y <= 300)
+    {
+        movingSaw3.setVelocityY(50);
+    }
     
-    /*
-    if (movingSaw1.x >= 500)
-    {
-        movingSaw1.setVelocityX(-50);
-    }
-    else if (movingSaw1.x <= 300)
-    {
-        movingSaw1.setVelocityX(50);
-    }
-    */
+
     this.physics.world.overlapTiles(player, pickups, hitPickup, null, this);
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 }
@@ -277,11 +306,11 @@ function hitPickup (player, tile)
 }
 
 
-function checkPlayerCollision(player, enemy) {
-    if (player.x < enemy.x + enemy.width && 
-        player.x + player.width > enemy.x && 
-        player.y < enemy.y + enemy.height &&
-        player.height + player.y > enemy. y){
+function checkPlayerCollision(player, deadlyplatform) {
+    if (player.x < deadlyplatform.x + deadlyplatform.width && 
+        player.x + player.width > deadlyplatform.x && 
+        player.y < deadlyplatform.y + deadlyplatform.height &&
+        player.height + player.y > deadlyplatform. y){
             playerCollision = true;
             return true;
         }
