@@ -10,7 +10,7 @@ class Play extends Phaser.Scene {
         this.load.image('sky', './assets/sky.png');
         this.load.image('moving_platform', './assets/movingplatform.png');
         this.load.image('ground', './assets/platform.png');
-        this.load.spritesheet('dude', './assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+        this.load.spritesheet('dude', './assets/dude.png', { frameWidth: 32, frameHeight: 28 });
         this.load.image('back', './assets/background.png');
         this.load.audio('sfx_select', './assets/select.wav');
         this.load.audio('sfx_music', './assets/JungleJump.wav');
