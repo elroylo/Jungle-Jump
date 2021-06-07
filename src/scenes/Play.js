@@ -24,6 +24,7 @@ class Play extends Phaser.Scene {
         this.load.image('star_animation', './assets/star_animation.png');
         this.load.audio('sfx_select', './assets/select.wav');
         this.load.audio('sfx_jump', './assets/jump.wav');
+        this.load.audio('sfx_music', './assets/JungleJump.wav');
         this.load.audio('sfx_apple', './assets/apple.wav');
         this.load.audio('sfx_pear', './assets/pear.wav')
         this.load.audio('sfx_jetpack', './assets/jetpack.wav');
@@ -39,11 +40,12 @@ class Play extends Phaser.Scene {
     */
 
     create () {
-        //this.background = this.add.sprite(400, 300, 'back');
+        this.background = this.add.sprite(3200, 3200, 'back');
         //  Set the camera and physics bounds to be the size of 4x4 bg images
         this.cameras.main.setBounds(0, 0, 8000 * 2, 5600 * 2);
         //this.physics.world.setBounds(0, 0, 800 * 2, 600 * 2);
-
+        this.musicPlaying = this.sound.add('sfx_music', './assets/JungleJump.wav');
+        this.musicPlaying.play();
         this.ammo = 1.05;
         this.text = this.add.text(10, 10, '', { fill: '#00ff00' }).setDepth(1);
         this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
@@ -128,7 +130,6 @@ class Play extends Phaser.Scene {
     {   
         // score multiplier
         scoreMultiplier = this.initialTime/25;
-
         this.fueltext.x = player.x;
         this.fueltext.y = player.y - 20;
         this.scoretext.x = player.x;
@@ -148,8 +149,6 @@ class Play extends Phaser.Scene {
         // full game over detection
         if(game.global.gameOver == true && game.global.gameOverTest == 0){
             game.global.gameOverTest = 1;
-            this.gameOverText = this.add.text(player.x, player.y, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
-            this.restartText = this.add.text(player.x - 30, player.y + 90, 'Press <- to restart', { fontSize: '22px', fill: '#fff' });
             this.sound.play('sfx_death');
             // don't delete these test casts vv
             // player.x, player.y,
@@ -162,6 +161,7 @@ class Play extends Phaser.Scene {
             if(highscore < gameOverScore){
                 highscore = gameOverScore;
             }
+            this.musicPlaying.stop();
             this.scene.start("menuScene");
             //}
         }   
@@ -211,7 +211,7 @@ class Play extends Phaser.Scene {
             player.setVelocityY(speedinc);
             speedinc -= 10;
             fuel -= 10;
-            this.sound.play('sfx_jetpack');
+            //this.sound.play('sfx_jetpack');
             
         }
         else if (speedinc <= 10 && fuel < 2100 )
@@ -298,7 +298,9 @@ escape ()
     if(highscore < gameOverScore){
         highscore = gameOverScore;
     }
-    this.scene.start('creditsScene');
+    game.global.gameCompleted = true;
+    this.musicPlaying.stop();
+    this.scene.start('menuScene');
 }
 
 

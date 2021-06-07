@@ -1,13 +1,13 @@
 //console.log("game completed: " + this.gameCompleted);
 class Credits extends Phaser.Scene {
     constructor() {
-        super("creditsScene");
+        super("menuScene");
     }
     // debugger
     gameCompleted = true;
     create() {
-    // credits text configuration
-        creditsConfig = {
+    // menu text configuration
+        menuConfig = {
             fontFamily: 'Times',
             fontSize: '28px',
             backgroundColor: '#ff0000',
@@ -21,12 +21,12 @@ class Credits extends Phaser.Scene {
         }
 
         //ergergegere[[[[]]]]
-        //show credits text
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'Credits:', creditsConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Gabriel and Elroy were our programmers, Mariel handled art and level design, and Gabriel did our sound design.', creditsConfig).setOrigin(0.5);
-        creditsConfig.backgroundColor = '#0fFFf0';
-        creditsConfig.config = '#000';
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press <- to play again', creditsConfig).setOrigin(0.5);
+        //show menu text
+        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'Credits:', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2, 'Gabriel and Elroy were our programmers, Mariel handled art and level design, and Gabriel did our sound design.', menuConfig).setOrigin(0.5);
+        menuConfig.backgroundColor = '#0fFFf0';
+        menuConfig.config = '#000';
+        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press <- to play again', menuConfig).setOrigin(0.5);
         //this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Your Previous Score', gameOverScore).setOrigin(0.5);
         this.gameHighScore = this.add.text(300, 160, 'Your highest score: ' + highscore, { fontSize: '20px', fill: '#fff' });
         this.gameOverScore = this.add.text(300, 200, 'Your last score: ' + gameOverScore, { fontSize: '18px', fill: '#fff' });
@@ -41,6 +41,7 @@ class Credits extends Phaser.Scene {
           game.global.gameOver = false;
           game.global.gameOverTest = 0;
           game.global.score = 0;
+          game.global.gameCompleted = false;
         }
       }
 }

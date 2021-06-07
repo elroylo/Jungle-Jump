@@ -38,16 +38,17 @@ var gameOverTest = 0;
 var movingPlatform1, movingPlatform2, movingPlatform3;
 var highscore = 0;
 var gameOverScore = 0;
-var gameCompleted;
 var text;
 var timedEvent;
 var scoreMultiplier;
-var sfxfruit, sfxdeath, sfxjetpack;
+var music;
+var gameCompleted;
 // global vars
 game.global = {
     gameOver: false,
     gameOverTest: 0,
     score: 0,
+    gameCompleted: false
 }
 
 let keyLEFT, keyRIGHT, keyUP, keyDOWN;
