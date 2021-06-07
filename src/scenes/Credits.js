@@ -1,12 +1,10 @@
+gameCompleted = true;
 class Credits extends Phaser.Scene {
     constructor() {
         super("creditsScene");
     }
-    preload() {
-        // load audio
-        this.load.audio('sfx_select', './assets/select.wav');
-        
-    }
+    // debugger
+    //gameCompleted = true;
     
     create() {
     /*
@@ -45,7 +43,6 @@ class Credits extends Phaser.Scene {
     
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-          this.sound.play('sfx_select');
           this.scene.start('playScene');
           game.global.gameOver = false;
           game.global.gameOverTest = 0;
