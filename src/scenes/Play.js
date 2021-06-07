@@ -3,10 +3,7 @@ class Play extends Phaser.Scene {
         super("playScene");
     }
     preload () {
-        //this.load.image('tiles', './assets/gridtiles2.png');
         this.load.image('tiles', './assets/gridtiles_1.png');
-        //this.load.tilemapTiledJSON('map', './assets/simple-map.json');
-        //this.load.tilemapTiledJSON('map', './assets/junglejump.json');
         this.load.tilemapTiledJSON('map', './assets/junglejump1.json');
         this.load.tilemapTiledJSON('map1', './assets/simple-map.json');
         this.load.image('sky', './assets/sky.png');
@@ -31,27 +28,24 @@ class Play extends Phaser.Scene {
         this.load.audio('sfx_jetpack', './assets/jetpack.wav');
         this.load.audio('sfx_death', './assets/death.wav');
     }
-/*
-    preload() {
-        // load audio
-        this.load.audio('sfx_jetpack', './assets/jetpack.wav');
-        this.load.audio('sfx_death', './assets/death.wav');
-        this.load.audio('sfx_fruit', './assets/fruit.wav');
-    }
-    */
 
     create () {
+        // displays the game background that is 3200 x 3200
         this.background = this.add.sprite(3200, 3200, 'back');
+
         //  Set the camera and physics bounds to be the size of 4x4 bg images
         this.cameras.main.setBounds(0, 0, 8000 * 2, 5600 * 2);
-        //this.physics.world.setBounds(0, 0, 800 * 2, 600 * 2);
+
+        // plays the music
         this.musicPlaying = this.sound.add('sfx_music', './assets/JungleJump.wav');
         this.musicPlaying.play();
-        this.ammo = 1.05;
+
+        // initialization of tilemap
         this.text = this.add.text(10, 10, '', { fill: '#00ff00' }).setDepth(1);
         this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
         this.tileset = this.map.addTilesetImage('tiles');
         this.layer = this.map.createLayer('Tile_Layer_1', this.tileset);
+
         // game clock time of 8 minutes
         this.initialTime = 480;
         
@@ -69,17 +63,27 @@ class Play extends Phaser.Scene {
 
         //this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
-        movingPlatform2 = this.physics.add.image(400, 400, 'moving_platform');
+        movingPlatform2 = this.physics.add.image(1600, 1100, 'moving_platform');
         movingPlatform2.setImmovable(true);
         movingPlatform2.body.allowGravity = false;
         movingPlatform2.setVelocityX(50);
 
-        movingPlatform3 = this.physics.add.image(400, 400, 'deadly_platform');
+        movingPlatform3 = this.physics.add.image(4600, 3600, 'moving_platform');
         movingPlatform3.setImmovable(true);
         movingPlatform3.body.allowGravity = false;
-        movingPlatform3.setVelocityY(50);
-        
+        movingPlatform3.setVelocityX(70);
 
+        movingPlatform4 = this.physics.add.image(5100, 2100, 'moving_platform');
+        movingPlatform4.setImmovable(true);
+        movingPlatform4.body.allowGravity = false;
+        movingPlatform4.setVelocityX(75);
+
+        movingPlatform5 = this.physics.add.image(2400, 3050, 'moving_platform');
+        movingPlatform5.setImmovable(true);
+        movingPlatform5.body.allowGravity = false;
+        movingPlatform5.setVelocityX(100);
+        
+        // creates player sprite
         player = this.physics.add.sprite(200, 1600, 'dude');
         player.setBounce(0.01);
         
@@ -90,12 +94,17 @@ class Play extends Phaser.Scene {
 
         // player and platform collider
 
-        //this.physics.add.collider(player, movingPlatform1);
         this.physics.add.collider(player, movingPlatform2);
         this.physics.add.collider(player, movingPlatform3);
+        this.physics.add.collider(player, movingPlatform4);
+        this.physics.add.collider(player, movingPlatform5);
         this.physics.add.collider(player, this.platforms);
-        this.physics.add.collider(player, this.movingPlatform);
+        this.physics.add.collider(player, this.movingPlatform2);
+        this.physics.add.collider(player, this.movingPlatform3);
+        this.physics.add.collider(player, this.movingPlatform4);
+        this.physics.add.collider(player, this.movingPlatform5);
 
+        // creating the animation for the player's movement
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -118,10 +127,10 @@ class Play extends Phaser.Scene {
 
         cursors = this.input.keyboard.createCursorKeys();
         
-
+        // implements the text as well as their location and color for fuel, score, and time
         this.fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#D5E27B' }).setDepth(1);
         this.scoretext = this.add.text(player.x, player.y - 30, '', { fill: '#D5E27B' }).setDepth(1);
-        this.timetext = this.add.text(player.x, player.y - 30, '', { fill: '#D5E27B' }).setDepth(1);
+        this.timetext = this.add.text(player.x, player.y - 40, '', { fill: '#D5E27B' }).setDepth(1);
         timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
 
     }
@@ -135,18 +144,12 @@ class Play extends Phaser.Scene {
         this.fueltext.y = player.y - 40;
         this.scoretext.x = player.x;
         this.scoretext.y = player.y - 60;
-        //this.formatTime(this.initialTime)
         this.timetext.x = player.x;
         this.timetext.y = player.y - 80;
-        //this.gameOverText.x = player.x;
-        //this.GameOverText.y = player.y;
-
+ 
         
 
         // detecting Game Over
-        if(this.checkPlayerCollision(player, movingPlatform3) == true){
-            game.global.gameOver = true;
-        }
         //if(this.playerCollision == true){
         //    this.gameOver = true;
         //}
@@ -154,11 +157,6 @@ class Play extends Phaser.Scene {
         if(game.global.gameOver == true && game.global.gameOverTest == 0){
             game.global.gameOverTest = 1;
             this.sound.play('sfx_death');
-            // don't delete these test casts vv
-            // player.x, player.y,
-            // 320, 240
-            // 290, 330
-            //this.scene.start("menuScene");
         }
         if(game.global.gameOver == true && game.global.gameOverTest == 1){
             gameOverScore = game.global.score;
@@ -179,17 +177,22 @@ class Play extends Phaser.Scene {
             //"Progress: " + timedEvent.getProgress().toString().substr(0, 4) + "%",
             'Countdown: ' + this.formatTime(this.initialTime),
         ]);
+
+        // displays text next to player
+        // displays fuel left
         this.fueltext.setText([
             'fuel:' + fuel,
         ]);
+        // displays current score
         this.scoretext.setText([
             'score:' + game.global.score,
         ]);
+        // displays current time left for speed bonus
         this.timetext.setText([
             'Time Left: ' + this.formatTime(this.initialTime),
         ]);
      
-
+        // animations and velocity for left, right, and idle movement
         if (cursors.left.isDown)
         {
             player.setVelocityX(-320);
@@ -207,19 +210,18 @@ class Play extends Phaser.Scene {
         {
             player.setVelocityX(0);
             player.anims.play('turn');
-
         }
 
 
         
-
+        // jetpack functionality
+        // if fuel is above 10, you can use fuel
+        // if fuel is below 2000, you can charge your fuel back up
         if (cursors.up.isDown && speedinc >= -300 && fuel >= 10)
         {
             player.setVelocityY(speedinc);
             speedinc -= 10;
             fuel -= 10;
-            //this.sound.play('sfx_jetpack');
-            
         }
         else if (speedinc <= 10 && fuel < 2100 )
         {
@@ -229,28 +231,52 @@ class Play extends Phaser.Scene {
         else if (fuel < 2000 && player.body.blocked.down)
         {
             fuel += 10;
-            speedinc = 10
-            
+            speedinc = 10;
         }
         
         
-        // update for moving platform
-        if (movingPlatform2.x >= 500)
+        // update for moving platforms
+        //Platform2
+        if (movingPlatform2.x >= 2000)
         {
             movingPlatform2.setVelocityX(-50);
         }
-        else if (movingPlatform2.x <= 300)
+        else if (movingPlatform2.x <= 1590)
         {
             movingPlatform2.setVelocityX(50);
         }
-        if (movingPlatform3.y >= 500)
+        //Platform3
+        if (movingPlatform3.x >= 5400)
         {
-            movingPlatform3.setVelocityY(-50);
+            movingPlatform3.setVelocityX(-50);
         }
-        else if (movingPlatform3.y <= 300)
+        else if (movingPlatform3.x <= 4590)
         {
-            movingPlatform3.setVelocityY(50);
+            movingPlatform3.setVelocityX(50);
         }
+        //Platform4
+        if (movingPlatform4.x >= 6000)
+        {
+            movingPlatform4.setVelocityX(-50);
+        }
+        else if (movingPlatform4.x <= 5090)
+        {
+            movingPlatform4.setVelocityX(50);
+        }
+        //Platform5
+        if (movingPlatform5.x >= 3600)
+        {
+            movingPlatform5.setVelocityX(-50);
+        }
+        else if (movingPlatform5.x <= 2390)
+        {
+            movingPlatform5.setVelocityX(50);
+        }
+        
+        // collision cases and rules for the tiles from the tilemaps
+        // the this.hitpickup's are fruits
+        // the this.hitdead are deadly tiles
+        // escape is the finish line
         this.physics.world.overlapTiles(player, this.pickups, this.hitPickup,  null, this);
         this.physics.world.overlapTiles(player, this.pickups2, this.hitPickup2, null, this);
         this.physics.world.overlapTiles(player, this.spikeball, this.hitdead, null, this);
@@ -270,7 +296,8 @@ reset(){
 
 
 
-// pick up function
+// apple pick up function
+// purpose: to pick up the apple
 hitPickup (player, tile)
 {
     this.sound.play('sfx_apple');
@@ -281,7 +308,8 @@ hitPickup (player, tile)
         return (tile.index === 82);
     });
 }
-
+// pear pick up function
+// purpose: to pick up the pear
 hitPickup2 (player, tile)
 {
     this.sound.play('sfx_pear');
@@ -292,12 +320,16 @@ hitPickup2 (player, tile)
         return (tile.index === 83);
     });
 }
-
+// death function for certain tiles in the tile map
+// purpose: to prompt death after touching a deadly tile
 hitdead ()
 {
     game.global.gameOver = true;
 }
 
+// escape function
+// purpose: allows a tile to have escape properties while
+//          also allowing the post-game score implementation to happen
 escape ()
 {
    // game.global.score = (game.global.score * scoreMultiplier);
@@ -312,7 +344,9 @@ escape ()
 
 
 
-
+// checks for player collision with a deadly platform
+// purpose: if there exists a collision to a deadlyplatform,
+//          the player will die
 checkPlayerCollision(player, deadlyplatform) {
     if (player.x < deadlyplatform.x + deadlyplatform.width && 
         player.x + player.width > deadlyplatform.x && 
@@ -326,6 +360,8 @@ checkPlayerCollision(player, deadlyplatform) {
         }
 
 }
+
+// formats the time for the timer
 formatTime(seconds){
     // Minutes
     var minutes = Math.floor(seconds/60);
@@ -337,7 +373,7 @@ formatTime(seconds){
     return `${minutes}:${partInSeconds}`;
 }
 
-
+// helps in the time formation and debugging
 onEvent ()
 {
     this.initialTime -= 1; // One second

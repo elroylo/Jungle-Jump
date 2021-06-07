@@ -3,18 +3,14 @@ class Menu extends Phaser.Scene {
         super("menuScene");
     }
     preload() {
-        // load audio
+        // load audio and background
         this.load.audio('sfx_select', './assets/select.wav');
         this.load.image('menuBackground', './assets/menuBackground.png');
         
     }
     
     create() {
-    /*
-      if (!'sfx_music'.isPlaying)
-      {
-        this.sound.play('sfx_music');
-      }*/
+    
     // menu text configuration
         let menuConfig = {
             //fontFamily: 'Times',
@@ -30,10 +26,13 @@ class Menu extends Phaser.Scene {
         
     }
 
-    //show menu text
+    // shows menu background
     this.menuBackground = this.add.sprite(1280/2, 720/2, 'menuBackground');
-    //this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'Jungle Jump', menuConfig).setOrigin(0.5);
+
+    // displays the jungle jump header title
     this.add.text(game.config.width/2 - 130, game.config.height/2 - borderUISize - borderPadding, 'Jungle Jump', { fontSize: '38px', fill: '#fff' });
+    
+    // menu screen
     if(game.global.gameCompleted != true){
       this.add.text(game.config.width/2, game.config.height/2 + 40, 'Use the arrow keys to move. ', menuConfig).setOrigin(0.5);
       this.add.text(game.config.width/2, game.config.height/2 + 80, 'Hold the up arrow key to use your jetpack and avoid the spikes.', menuConfig).setOrigin(0.5);
@@ -41,6 +40,8 @@ class Menu extends Phaser.Scene {
       this.add.text(game.config.width/2, game.config.height/2 + 160, 'The faster you beat the game before the timer runs out—the more your score is multiplied.', menuConfig).setOrigin(0.5);
       this.add.text(game.config.width/2, game.config.height/2 + 200, 'Press the left arrow key to play', menuConfig).setOrigin(0.5);
     }
+
+    // credits screen
     if(game.global.gameCompleted == true){
       this.add.text(game.config.width/2, game.config.height/2 + 40, 'Credits:', menuConfig).setOrigin(0.5);
       this.add.text(game.config.width/2, game.config.height/2 + 80, 'Gabriel and Elroy were our programmers,', menuConfig).setOrigin(0.5);
@@ -48,8 +49,10 @@ class Menu extends Phaser.Scene {
       this.add.text(game.config.width/2, game.config.height/2 + 160, 'and Gabriel did our sound design.', menuConfig).setOrigin(0.5);
       this.add.text(game.config.width/2, game.config.height/2 + 200, 'Press the left arrow key to play again', menuConfig).setOrigin(0.5);
     }
+
     //menuConfig.backgroundColor = '#0fFFf0';
     menuConfig.config = '#000';
+    // displays highscore and your last score
     this.gameHighScore = this.add.text(470, 160, 'Your highest score: ' + highscore, { fontSize: '20px', fill: '#fff' });
     this.gameOverScore = this.add.text(470, 200, 'Your last score: ' + gameOverScore, { fontSize: '18px', fill: '#fff' });
 
@@ -59,6 +62,7 @@ class Menu extends Phaser.Scene {
 
     }
     
+    // resets the global vars and goes to play scene
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
           this.sound.play('sfx_select');

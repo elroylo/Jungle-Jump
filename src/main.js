@@ -16,7 +16,6 @@ var config = {
 var game = new Phaser.Game(config);
 
 // declaring variables
-//var ammo;
 var map;
 var tileset;
 var layer;
@@ -25,7 +24,6 @@ var player;
 var platforms;
 var cursors;
 var movingPlatform;
-var debug;
 var source;
 var target = new Phaser.Math.Vector2();
 var playerCollision;
@@ -35,7 +33,7 @@ var speedinc = 0;
 var xyinc;
 var fuel = 2000;
 var gameOverTest = 0;
-var movingPlatform1, movingPlatform2, movingPlatform3;
+var movingPlatform1, movingPlatform2, movingPlatform3, movingPlatform4, movingPlatform5;
 var highscore = 0;
 var gameOverScore = 0;
 var text;
