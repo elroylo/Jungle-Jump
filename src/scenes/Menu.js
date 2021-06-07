@@ -31,7 +31,7 @@ class Menu extends Phaser.Scene {
 
     //show menu text
     this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'Jungle Jump', menuConfig).setOrigin(0.5);
-    this.add.text(game.config.width/2, game.config.height/2, 'Use the arrowkeys to move and right mouse click to shoot.', menuConfig).setOrigin(0.5);
+    this.add.text(game.config.width/2, game.config.height/2, 'Use the arrowkeys to move.', menuConfig).setOrigin(0.5);
     menuConfig.backgroundColor = '#0fFFf0';
     menuConfig.config = '#000';
     this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press <- to play', menuConfig).setOrigin(0.5);

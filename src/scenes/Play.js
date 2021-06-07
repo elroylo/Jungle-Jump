@@ -3,9 +3,11 @@ class Play extends Phaser.Scene {
         super("playScene");
     }
     preload () {
-        this.load.image('tiles', './assets/gridtiles2.png');
-        this.load.image('tiles', './assets/gridtiles2.png');
-        this.load.tilemapTiledJSON('map', './assets/simple-map.json');
+        //this.load.image('tiles', './assets/gridtiles2.png');
+        this.load.image('tiles', './assets/gridtiles_1.png');
+        //this.load.tilemapTiledJSON('map', './assets/simple-map.json');
+        this.load.tilemapTiledJSON('map', './assets/junglejump.json');
+        this.load.tilemapTiledJSON('map1', './assets/simple-map.json');
         this.load.image('sky', './assets/sky.png');
         this.load.image('moving_platform', './assets/movingplatform.png');
         this.load.image('deadly_platform', './assets/deadlyplatform.png');
@@ -36,24 +38,28 @@ class Play extends Phaser.Scene {
     */
 
     create () {
-        this.background = this.add.sprite(400, 300, 'back');
+        //this.background = this.add.sprite(400, 300, 'back');
         //  Set the camera and physics bounds to be the size of 4x4 bg images
-        this.cameras.main.setBounds(0, 0, 800 * 2, 600 * 2);
+        this.cameras.main.setBounds(0, 0, 8000 * 2, 5600 * 2);
         //this.physics.world.setBounds(0, 0, 800 * 2, 600 * 2);
 
         this.ammo = 1.05;
         this.text = this.add.text(10, 10, '', { fill: '#00ff00' }).setDepth(1);
         this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
         this.tileset = this.map.addTilesetImage('tiles');
-        this.layer = this.map.createLayer('Level1', this.tileset);
+        this.layer = this.map.createLayer('Tile_Layer_1', this.tileset);
         this.initialTime = 480;
         
-        this.map.setCollision([ 20, 48 ]);
-
-        this.pickups = this.map.filterTiles(function (tile) {
-            return (tile.index === 82);
-        });
-
+        this.map.setCollision([ 20, 48, 57, 58, 59, 71, 72, 73, 85, 86, 87, 99, 100, 101, 113, 114, 115, 127, 128, 129]);
+        this.map.setCollision([ 36, 37, 39,]);
+        this.pickups = this.map.filterTiles(function (tile) {return (tile.index === 82); });
+        this.pickups2 = this.map.filterTiles(function (tile) {return (tile.index === 83); });
+        this.spikeball = this.map.filterTiles(function (tile) {return (tile.index === 81); });
+        this.gryupspike = this.map.filterTiles(function (tile) {return (tile.index === 94);});
+        this.grydownspike = this.map.filterTiles(function (tile) {return (tile.index === 95);});
+        this.brwnupspike = this.map.filterTiles(function (tile) {return (tile.index === 122);});
+        this.brwndownspike = this.map.filterTiles(function (tile) {return (tile.index === 123);});
+        this.exit = this.map.filterTiles(function (tile) {return (tile.index === 77); });
         this.platforms = this.physics.add.staticGroup();
 
         //this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -71,13 +77,11 @@ class Play extends Phaser.Scene {
 
         player = this.physics.add.sprite(100, 450, 'dude');
         player.setBounce(0.01);
-        player.setCollideWorldBounds(true);
+        
         this.physics.add.collider(player, this.layer);
 
         this.cameras.main.startFollow(player, true, 0.09, 0.09);
         this.cameras.main.setZoom(1);
-
-        player.setCollideWorldBounds(true);
 
         // player and platform collider
 
@@ -180,13 +184,13 @@ class Play extends Phaser.Scene {
         {
             player.setVelocityX(-320);
             player.anims.play('left', true);
-            player.x -= 2.5;
+            player.x -= 1.25;
         }
         else if (cursors.right.isDown)
         {
             player.setVelocityX(320);
             player.anims.play('right', true);
-            player.x += 2.5;
+            player.x += 1.25;
 
         }
         else
@@ -235,8 +239,14 @@ class Play extends Phaser.Scene {
         {
             movingPlatform3.setVelocityY(50);
         }
-        this.physics.world.overlapTiles(player, this.pickups, this.hitPickup, null, this);
-        this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+        this.physics.world.overlapTiles(player, this.pickups, this.hitPickup,  null, this);
+        this.physics.world.overlapTiles(player, this.pickups2, this.hitPickup2, null, this);
+        this.physics.world.overlapTiles(player, this.spikeball, this.hitdead, null, this);
+        this.physics.world.overlapTiles(player, this.grydownspike, this.hitdead, null, this);
+        this.physics.world.overlapTiles(player, this.gryupspike, this.hitdead, null, this);
+        this.physics.world.overlapTiles(player, this.brwndownspike, this.hitdead, null, this);
+        this.physics.world.overlapTiles(player, this.brwnupspike, this.hitdead, null, this);
+        this.physics.world.overlapTiles(player, this.exit, this.escape, null, this);
     }
 //
 //          end of update
@@ -255,11 +265,32 @@ hitPickup (player, tile)
 
     this.pickups = this.map.filterTiles(function (tile) {
         game.global.score += 10;
-        fuel = 2000;
-        
         return (tile.index === 82);
     });
 }
+
+hitPickup2 (player, tile)
+{
+    this.map.removeTile(tile, 29, false);
+
+    this.pickups2 = this.map.filterTiles(function (tile) {
+        fuel = 2000;
+        return (tile.index === 83);
+    });
+}
+
+hitdead ()
+{
+    game.global.gameOver = true;
+}
+
+escape ()
+{
+    score = (score * this.initialTime/10)
+    this.scene.start('creditsScene');
+}
+
+
 
 
 checkPlayerCollision(player, deadlyplatform) {
