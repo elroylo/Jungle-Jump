@@ -6,7 +6,8 @@ class Play extends Phaser.Scene {
         //this.load.image('tiles', './assets/gridtiles2.png');
         this.load.image('tiles', './assets/gridtiles_1.png');
         //this.load.tilemapTiledJSON('map', './assets/simple-map.json');
-        this.load.tilemapTiledJSON('map', './assets/junglejump.json');
+        //this.load.tilemapTiledJSON('map', './assets/junglejump.json');
+        this.load.tilemapTiledJSON('map', './assets/junglejump1.json');
         this.load.tilemapTiledJSON('map1', './assets/simple-map.json');
         this.load.image('sky', './assets/sky.png');
         this.load.image('moving_platform', './assets/movingplatform.png');
@@ -54,8 +55,8 @@ class Play extends Phaser.Scene {
         // game clock time of 8 minutes
         this.initialTime = 480;
         
-        this.map.setCollision([ 20, 48, 57, 58, 59, 71, 72, 73, 85, 86, 87, 99, 100, 101, 113, 114, 115, 127, 128, 129]);
-        this.map.setCollision([ 36, 37, 39,]);
+        this.map.setCollision([ 20, 48, 57, 58, 59, 71, 72, 73, 85, 86, 87, 99, 100, 101, 102, 103, 104, 105, 112, 113, 114, 115, 116, 117, 118, 119, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136]);
+        this.map.setCollision([ 36, 37, 38, 39,]);
         this.pickups = this.map.filterTiles(function (tile) {return (tile.index === 82); });
         this.pickups2 = this.map.filterTiles(function (tile) {return (tile.index === 83); });
         this.spikeball = this.map.filterTiles(function (tile) {return (tile.index === 81); });
@@ -79,7 +80,7 @@ class Play extends Phaser.Scene {
         movingPlatform3.setVelocityY(50);
         
 
-        player = this.physics.add.sprite(200, 450, 'dude');
+        player = this.physics.add.sprite(200, 1600, 'dude');
         player.setBounce(0.01);
         
         this.physics.add.collider(player, this.layer);
@@ -120,7 +121,7 @@ class Play extends Phaser.Scene {
 
         this.fueltext = this.add.text(player.x, player.y - 20, '', { fill: '#D5E27B' }).setDepth(1);
         this.scoretext = this.add.text(player.x, player.y - 30, '', { fill: '#D5E27B' }).setDepth(1);
-
+        this.timetext = this.add.text(player.x, player.y - 30, '', { fill: '#D5E27B' }).setDepth(1);
         timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
 
     }
@@ -131,9 +132,12 @@ class Play extends Phaser.Scene {
         // score multiplier
         scoreMultiplier = this.initialTime/25;
         this.fueltext.x = player.x;
-        this.fueltext.y = player.y - 20;
+        this.fueltext.y = player.y - 40;
         this.scoretext.x = player.x;
-        this.scoretext.y = player.y - 40;
+        this.scoretext.y = player.y - 60;
+        //this.formatTime(this.initialTime)
+        this.timetext.x = player.x;
+        this.timetext.y = player.y - 80;
         //this.gameOverText.x = player.x;
         //this.GameOverText.y = player.y;
 
@@ -180,6 +184,9 @@ class Play extends Phaser.Scene {
         ]);
         this.scoretext.setText([
             'score:' + game.global.score,
+        ]);
+        this.timetext.setText([
+            'Time Left: ' + this.formatTime(this.initialTime),
         ]);
      
 
@@ -294,7 +301,7 @@ hitdead ()
 escape ()
 {
    // game.global.score = (game.global.score * scoreMultiplier);
-    gameOverScore = game.global.score * scoreMultiplier;
+    gameOverScore = game.global.score * (scoreMultiplier + 1);
     if(highscore < gameOverScore){
         highscore = gameOverScore;
     }
